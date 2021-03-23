@@ -5,6 +5,8 @@ It takes input in the form of data from file, or single line user input.<br>
 It encrypts and save it into a file (this file/path shall be given by input).<br><br>
 The `encrypt` and `decrypt` function returns string and takes input as string, allowing this API to be implemented into any project that uses golang.
 
+API: `src/encryption/Encryption.go` - [Line#156](https://github.com/shank03/Encryption/blob/main/src/encryption/Encryption.go#L156)
+
 Written in Golang.<br>
 <br>
 <br>
