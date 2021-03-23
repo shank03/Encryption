@@ -116,7 +116,7 @@ func showOptions(mode string, scanner *bufio.Scanner) {
 					fmt.Println("Enter input:")
 					if scanner.Scan() {
 						input = scanner.Text()
-						for input != "" {
+						for input == "" {
 							fmt.Println("Enter input:")
 							if scanner.Scan() {
 								input = scanner.Text()
@@ -241,7 +241,7 @@ func encrypt(text string, scanner *bufio.Scanner) string {
 			outStr += formatBinaryString(strconv.FormatUint(ps^keyMask, 2)) + " \n"
 		}
 	}
-	return outStr
+	return outStr + lineSeparator + "\n"
 }
 
 func decrypt(encData []byte, scanner *bufio.Scanner) string {
