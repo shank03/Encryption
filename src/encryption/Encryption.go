@@ -198,6 +198,12 @@ func encrypt(text string, scanner *bufio.Scanner) string {
 	fmt.Print("Enter key to encrypt:\n")
 	if scanner.Scan() {
 		k = scanner.Text()
+		for k == "" {
+			fmt.Print("Enter key to encrypt:\n")
+			if scanner.Scan() {
+				k = scanner.Text()
+			}
+		}
 	}
 	var keyMask uint64 = 0
 	for i := 0; i < len(k); i++ {
@@ -251,6 +257,12 @@ func decrypt(encData []byte, scanner *bufio.Scanner) string {
 	fmt.Print("Enter key to decrypt:\n")
 	if scanner.Scan() {
 		k = scanner.Text()
+		for k == "" {
+			fmt.Print("Enter key to decrypt:\n")
+			if scanner.Scan() {
+				k = scanner.Text()
+			}
+		}
 	}
 	var keyMask uint64 = 0
 	for i := 0; i < len(k); i++ {
