@@ -6,7 +6,7 @@ It encrypts and save it into a file (this file/path shall be given by input).<br
 The `encrypt` and `decrypt` function returns string and takes input as string, allowing this API to be implemented into any project that uses golang or C++.
 
 API: 
-- <b>Golang</b>: `Golang/src/encryption/Encryption.go` - [Line#156](https://github.com/shank03/Encryption/blob/main/Golang/src/encryption/Encryption.go#L156)
+- <b>Golang</b>: `Golang/src/encryption/Encryption.go`
 - <b>C++</b>: `encryption.h` & `encryption.cpp`
 
 <br>
