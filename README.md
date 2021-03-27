@@ -3,11 +3,12 @@
 
 It takes input in the form of data from file, or single line user input.<br>
 It encrypts and save it into a file (this file/path shall be given by input).<br><br>
-The `encrypt` and `decrypt` function returns string and takes input as string, allowing this API to be implemented into any project that uses golang or C++.
+The `encrypt` and `decrypt` function returns string and takes input as string, allowing this API to be implemented into any project that uses golang/C++/kotlin.
 
 API: 
 - <b>Golang</b>: `Golang/src/encryption/Encryption.go`
 - <b>C++</b>: `encryption.h` & `encryption.cpp`
+- <b>Kotlin</b>: `Kotlin/Encryption.kt`
 
 <br>
 
