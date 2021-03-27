@@ -57,6 +57,18 @@ func showOptions(mode string, scanner *bufio.Scanner) {
 			}
 		}
 
+        var key string
+        fmt.Print("Enter key:\n")
+        if scanner.Scan() {
+            key = scanner.Text()
+            for key == "" {
+                fmt.Print("Enter key:\n")
+                if scanner.Scan() {
+                    key = scanner.Text()
+                }
+            }
+        }
+
 		if mode == "1" {
 			var path string
 			fmt.Print("Enter file name or path to save encrypted text:\n")
@@ -86,7 +98,7 @@ func showOptions(mode string, scanner *bufio.Scanner) {
 							rFileDat, er = os.ReadFile(dat)
 						}
 
-						encDat := encrypt(string(rFileDat), scanner)
+						encDat := encrypt(string(rFileDat), key)
 						_, _ = file.WriteString(encDat)
 						fmt.Println("Encrypted text stored in " + file.Name())
 						_ = file.Close()
@@ -104,7 +116,7 @@ func showOptions(mode string, scanner *bufio.Scanner) {
 							}
 						}
 
-						encDat := encrypt(input, scanner)
+						encDat := encrypt(input, key)
 						_, _ = file.WriteString(encDat)
 						fmt.Println("Encrypted text stored in " + file.Name())
 						_ = file.Close()
@@ -127,7 +139,7 @@ func showOptions(mode string, scanner *bufio.Scanner) {
 					rFileDat, er = os.ReadFile(dat)
 				}
 
-				decDat := decrypt(rFileDat, scanner)
+				decDat := decrypt(string(rFileDat), key)
 				fmt.Println("Output:\n" + decDat)
 			}
 		}

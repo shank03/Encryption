@@ -15,11 +15,9 @@
 package main
 
 import (
-	"bufio"
-	"fmt"
-	"math"
-	"strconv"
-	"strings"
+    "math"
+    "strconv"
+    "strings"
 )
 
 const lineSeparator = "--------------------------------------------------------------------- "
@@ -58,23 +56,12 @@ func binaryToUint(bin string) uint64 {
 	return out
 }
 
-func encrypt(text string, scanner *bufio.Scanner) string {
+func encrypt(text string, key string) string {
 	var outStr string
 
-	var k string
-	fmt.Print("Enter key to encrypt:\n")
-	if scanner.Scan() {
-		k = scanner.Text()
-		for k == "" {
-			fmt.Print("Enter key to encrypt:\n")
-			if scanner.Scan() {
-				k = scanner.Text()
-			}
-		}
-	}
 	var keyMask uint64 = 0
-	for i := 0; i < len(k); i++ {
-		keyMask += uint64(k[i])
+	for i := 0; i < len(key); i++ {
+		keyMask += uint64(key[i])
 	}
 
 	for _, line := range strings.Split(text, "\n") {
@@ -117,29 +104,18 @@ func encrypt(text string, scanner *bufio.Scanner) string {
 	return outStr + lineSeparator + "\n"
 }
 
-func decrypt(encData []byte, scanner *bufio.Scanner) string {
+func decrypt(input string, key string) string {
 	var outStr string
 
-	var k string
-	fmt.Print("Enter key to decrypt:\n")
-	if scanner.Scan() {
-		k = scanner.Text()
-		for k == "" {
-			fmt.Print("Enter key to decrypt:\n")
-			if scanner.Scan() {
-				k = scanner.Text()
-			}
-		}
-	}
 	var keyMask uint64 = 0
-	for i := 0; i < len(k); i++ {
-		keyMask += uint64(k[i])
+	for i := 0; i < len(key); i++ {
+		keyMask += uint64(key[i])
 	}
 
 	var intoData = false
 	var data []rune = nil
 	var char rune
-	for _, line := range strings.Split(string(encData), "\n") {
+	for _, line := range strings.Split(input, "\n") {
 		if line == lineSeparator {
 			intoData = true
 			if data != nil {

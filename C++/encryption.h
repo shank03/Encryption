@@ -47,15 +47,17 @@ namespace encryption {
      * Encrypt Data
      *
      * @param text The text to be encrypted. Make sure there is '\n' at end of the string
+     * @param key  The key for encryption
      * @returns encrypted text (better to store in a file)
      */
-    std::string encrypt(const std::string &text);
+    std::string encrypt(const std::string &text, const std::string &key);
 
     /**
      * Decrypt Data
      *
-     * @param encDat The encrypted text to be decrypted. Make sure there is '\n' at end of the string
+     * @param input The encrypted text to be decrypted. Make sure there is '\n' at end of the string
+     * @param key   The key for decryption
      * @returns encrypted text (better to store in a file)
      */
-    std::string decrypt(const std::string &encDat);
+    std::string decrypt(const std::string &input, const std::string &key);
 }    // namespace encryption

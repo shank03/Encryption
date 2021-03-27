@@ -35,17 +35,10 @@ uint64_t encryption::binary_to_uint(const std::string &bin) {
     return out;
 }
 
-std::string encryption::encrypt(const std::string &text) {
+std::string encryption::encrypt(const std::string &text, const std::string &key) {
     std::stringstream outStr;
 
     // Key
-    std::string key;
-    std::cout << "Enter key:\n";
-    std::getline(std::cin, key);    // take care of implementing cin.ignore() when using externally using inputs
-    while (key.empty()) {
-        std::cout << "Empty key\nEnter key:\n";
-        std::getline(std::cin, key);
-    }
     uint64_t keyMask = 0;
     for (char i : key) keyMask += i;
 
@@ -95,17 +88,10 @@ std::string encryption::encrypt(const std::string &text) {
     return outStr.str();
 }
 
-std::string encryption::decrypt(const std::string &encDat) {
+std::string encryption::decrypt(const std::string &encDat, const std::string &key) {
     std::stringstream outStr;
 
     // Key
-    std::string key;
-    std::cout << "Enter key:\n";
-    std::getline(std::cin, key);    // take care of implementing cin.ignore() when using externally using inputs
-    while (key.empty()) {
-        std::cout << "Empty key\nEnter key:\n";
-        std::getline(std::cin, key);
-    }
     uint64_t keyMask = 0;
     for (char i : key) keyMask += i;
 

@@ -52,9 +52,18 @@ void showOptions(int mode) {
             std::cin >> option;
         }
 
+        std::string key;
+        std::cout << "Enter key:\n";
+        std::cin.clear();
+        std::getline(std::cin.ignore(), key);
+        while (key.empty()) {
+            std::cout << "Empty key\nEnter key:\n";
+            std::getline(std::cin, key);
+        }
+
         std::string path;
         std::cout << "Enter file name or path to save encrypted text:\n";
-        std::getline(std::cin.ignore(), path);
+        std::getline(std::cin, path);
         std::ofstream file(path);
         while (!file.is_open()) {
             std::cout << "Error opening file/path\n";
@@ -81,7 +90,7 @@ void showOptions(int mode) {
                 data << line << "\n";
             }
             rFileDat.close();
-            std::string encDat = encryption::encrypt(data.str());
+            std::string encDat = encryption::encrypt(data.str(), key);
             file << encDat;
             file.close();
             std::cout << "Encrypted text stored in " << path;
@@ -95,7 +104,7 @@ void showOptions(int mode) {
                 std::getline(std::cin, input);
             }
 
-            std::string encDat = encryption::encrypt(input + "\n");
+            std::string encDat = encryption::encrypt(input + "\n", key);
             file << encDat;
             file.close();
             std::cout << "Encrypted text stored in " << path;
@@ -108,9 +117,17 @@ void showOptions(int mode) {
             std::cin >> option;
         }
 
+        std::string key;
+        std::cout << "Enter key:\n";
+        std::getline(std::cin.ignore(), key);
+        while (key.empty()) {
+            std::cout << "Empty key\nEnter key:\n";
+            std::getline(std::cin, key);
+        }
+
         std::string dat;
         std::cout << "Enter file name to decrypt text from:\n";
-        std::getline(std::cin.ignore(), dat);
+        std::getline(std::cin, dat);
         std::ifstream rFileDat(dat);
         while (!rFileDat.is_open()) {
             std::cout << "Error opening file/path\n";
@@ -124,7 +141,7 @@ void showOptions(int mode) {
         while (std::getline(rFileDat, line)) {
             ss << line << "\n";
         }
-        std::string decDat = encryption::decrypt(ss.str());
+        std::string decDat = encryption::decrypt(ss.str(), key);
         std::cout << "Output:\n"
                   << decDat;
     }
