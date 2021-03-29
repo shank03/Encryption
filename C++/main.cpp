@@ -13,7 +13,9 @@
  */
 
 #include "encryption.h"
+#include <fstream>
 #include <iostream>
+#include <sstream>
 
 void showOptions(int mode);
 

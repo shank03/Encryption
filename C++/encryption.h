@@ -12,13 +12,9 @@
  * copies or substantial portions of the Software.
  */
 
-#include <bitset>
-#include <cmath>
-#include <cstring>
-#include <fstream>
-#include <iostream>
+#pragma once
+
 #include <map>
-#include <sstream>
 #include <vector>
 
 namespace encryption {

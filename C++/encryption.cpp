@@ -13,6 +13,10 @@
  */
 
 #include "encryption.h"
+#include <bitset>
+#include <cmath>
+#include <cstring>
+#include <sstream>
 
 void encryption::compress(const std::string &input, std::map<char, std::vector<uint64_t>> *map) {
     int len = input.length();
