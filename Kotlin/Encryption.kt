@@ -35,7 +35,7 @@ object Encryption {
 
         var keyMask: ULong = 0U
         for (c: Char in key) {
-            keyMask += c.toInt().toULong()
+            keyMask += keyMask.xor(c.toInt().toULong())
         }
 
         val tLines = text.split("\n")
@@ -73,7 +73,7 @@ object Encryption {
 
         var keyMask: ULong = 0U
         for (c: Char in key) {
-            keyMask += c.toInt().toULong()
+            keyMask += keyMask.xor(c.toInt().toULong())
         }
 
         val tLines = input.split("\n")

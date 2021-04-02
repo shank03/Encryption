@@ -15,8 +15,8 @@
 package main
 
 import (
-    "strconv"
-    "strings"
+	"strconv"
+	"strings"
 )
 
 const lineSeparator = "--------------------------------------------------------------------- "
@@ -35,12 +35,12 @@ func compress(input string, m *map[rune][]uint64) {
 }
 
 func binaryToUint(bin string) uint64 {
-	out, err := strconv.ParseUint(bin, 10, 64);
+	out, err := strconv.ParseUint(bin, 10, 64)
 	if err == nil {
-	    return out
-    } else {
-        return 0
-    }
+		return out
+	} else {
+		return 0
+	}
 }
 
 func encrypt(text string, key string) string {
@@ -48,7 +48,7 @@ func encrypt(text string, key string) string {
 
 	var keyMask uint64 = 0
 	for i := 0; i < len(key); i++ {
-		keyMask += uint64(key[i])
+		keyMask += keyMask ^ uint64(key[i])
 	}
 
 	for _, line := range strings.Split(text, "\n") {
@@ -62,7 +62,7 @@ func encrypt(text string, key string) string {
 		outStr += lineSeparator + "\n" + strconv.FormatUint(out, 10) + " \n"
 
 		for key, pos := range dataMap {
-		    outStr += strconv.FormatUint(uint64(key) ^ keyMask, 10) + " "
+			outStr += strconv.FormatUint(uint64(key)^keyMask, 10) + " "
 
 			var ps, c uint64 = 0, 0
 			for i := 0; i < len(pos); i++ {
@@ -88,7 +88,7 @@ func decrypt(input string, key string) string {
 
 	var keyMask uint64 = 0
 	for i := 0; i < len(key); i++ {
-		keyMask += uint64(key[i])
+		keyMask += keyMask ^ uint64(key[i])
 	}
 
 	var intoData = false
@@ -115,17 +115,17 @@ func decrypt(input string, key string) string {
 				if tok == "" {
 					continue
 				}
-                o := binaryToUint(tok) ^ keyMask
-                if t == 0 {
+				o := binaryToUint(tok) ^ keyMask
+				if t == 0 {
 					char = o
 				} else {
-				    numPos := o >> 32
-				    for p := uint64(0); p < numPos; p++ {
-				        pos := (o >> (8 * p)) & 0xFF
-				        if data != nil {
-				            data[pos-1] = rune(char)
-				        }
-				    }
+					numPos := o >> 32
+					for p := uint64(0); p < numPos; p++ {
+						pos := (o >> (8 * p)) & 0xFF
+						if data != nil {
+							data[pos-1] = rune(char)
+						}
+					}
 				}
 			}
 		}

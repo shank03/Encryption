@@ -13,7 +13,7 @@
  */
 
 #include "encryption.h"
- #include <bitset>
+#include <bitset>
 #include <cstring>
 #include <sstream>
 
@@ -42,7 +42,7 @@ std::string encryption::encrypt(const std::string &text, const std::string &key)
 
     // Key
     uint64_t keyMask = 0;
-    for (char i : key) keyMask += i;
+    for (char i : key) keyMask += keyMask ^ i;
 
     std::string t_token;
     size_t t_pos, t_index = 0;
@@ -86,7 +86,7 @@ std::string encryption::decrypt(const std::string &encDat, const std::string &ke
 
     // Key
     uint64_t keyMask = 0;
-    for (char i : key) keyMask += i;
+    for (char i : key) keyMask += keyMask ^ i;
 
     bool intoData = false;
     uint64_t datLength = 0;
