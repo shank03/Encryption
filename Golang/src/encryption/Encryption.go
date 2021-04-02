@@ -15,23 +15,11 @@
 package main
 
 import (
-    "math"
     "strconv"
     "strings"
 )
 
 const lineSeparator = "--------------------------------------------------------------------- "
-
-func formatBinaryString(bin string) string {
-	if len(bin) == 64 {
-		return bin
-	}
-	var out string
-	for i := 0; i < 64-len(bin); i++ {
-		out += "0"
-	}
-	return out + bin
-}
 
 func compress(input string, m *map[rune][]uint64) {
 	for i := 0; i < len(input); i++ {
@@ -47,13 +35,12 @@ func compress(input string, m *map[rune][]uint64) {
 }
 
 func binaryToUint(bin string) uint64 {
-	var out uint64 = 0
-	for i := 0; i < len(bin); i++ {
-		if bin[len(bin)-1-i] == '1' {
-			out += uint64(math.Pow(2, float64(i)))
-		}
-	}
-	return out
+	out, err := strconv.ParseUint(bin, 10, 64);
+	if err == nil {
+	    return out
+    } else {
+        return 0
+    }
 }
 
 func encrypt(text string, key string) string {
@@ -72,18 +59,10 @@ func encrypt(text string, key string) string {
 		compress(line, &dataMap)
 
 		var out = uint64(len(line)) ^ keyMask
-		outStr += lineSeparator + "\n" + formatBinaryString(strconv.FormatUint(out, 2)) + " \n"
+		outStr += lineSeparator + "\n" + strconv.FormatUint(out, 10) + " \n"
 
 		for key, pos := range dataMap {
-			if key == '\n' || key == '\r' {
-				outStr += "nl "
-			} else if key == '\t' {
-				outStr += "tb "
-			} else if key == ' ' {
-				outStr += "sp "
-			} else {
-				outStr += string(key) + " "
-			}
+		    outStr += strconv.FormatUint(uint64(key) ^ keyMask, 10) + " "
 
 			var ps, c uint64 = 0, 0
 			for i := 0; i < len(pos); i++ {
@@ -91,14 +70,14 @@ func encrypt(text string, key string) string {
 				c++
 				if c == 4 {
 					ps |= 4 << 32
-					outStr += formatBinaryString(strconv.FormatUint(ps^keyMask, 2)) + " "
+					outStr += strconv.FormatUint(ps^keyMask, 10) + " "
 					c, ps = 0, 0
 				}
 			}
 			if ps != 0 {
 				ps |= c << 32
 			}
-			outStr += formatBinaryString(strconv.FormatUint(ps^keyMask, 2)) + " \n"
+			outStr += strconv.FormatUint(ps^keyMask, 10) + " \n"
 		}
 	}
 	return outStr + lineSeparator + "\n"
@@ -114,7 +93,7 @@ func decrypt(input string, key string) string {
 
 	var intoData = false
 	var data []rune = nil
-	var char rune
+	var char uint64
 	for _, line := range strings.Split(input, "\n") {
 		if line == lineSeparator {
 			intoData = true
@@ -136,32 +115,17 @@ func decrypt(input string, key string) string {
 				if tok == "" {
 					continue
 				}
-				if t == 0 {
-					if len(tok) == 1 {
-						char = rune(tok[0])
-					}
-					if len(tok) == 2 {
-						if tok == "nl" {
-							char = '\n'
-						}
-						if tok == "sp" {
-							char = ' '
-						}
-						if tok == "tb" {
-							char = '\t'
-						}
-					}
+                o := binaryToUint(tok) ^ keyMask
+                if t == 0 {
+					char = o
 				} else {
-					if len(tok) == 64 {
-						o := binaryToUint(tok) ^ keyMask
-						numPos := o >> 32
-						for p := uint64(0); p < numPos; p++ {
-							pos := (o >> (8 * p)) & 0xFF
-							if data != nil {
-								data[pos-1] = char
-							}
-						}
-					}
+				    numPos := o >> 32
+				    for p := uint64(0); p < numPos; p++ {
+				        pos := (o >> (8 * p)) & 0xFF
+				        if data != nil {
+				            data[pos-1] = rune(char)
+				        }
+				    }
 				}
 			}
 		}

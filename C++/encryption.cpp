@@ -13,8 +13,7 @@
  */
 
 #include "encryption.h"
-#include <bitset>
-#include <cmath>
+ #include <bitset>
 #include <cstring>
 #include <sstream>
 
@@ -33,9 +32,8 @@ void encryption::compress(const std::string &input, std::map<char, std::vector<u
 
 uint64_t encryption::binary_to_uint(const std::string &bin) {
     uint64_t out = 0;
-    for (int i = 0; i < bin.length(); i++) {
-        if (bin[bin.length() - 1 - i] == '1') out += pow(2, i);
-    }
+    std::istringstream iss(bin);
+    iss >> out;
     return out;
 }
 
@@ -57,34 +55,25 @@ std::string encryption::encrypt(const std::string &text, const std::string &key)
 
         uint64_t out = t_token.length() ^ keyMask;
         outStr << LINE_SEPARATOR << "\n"
-               << std::bitset<64>(out) << " \n";
+               << (out) << " \n";
 
         // Encrypting mapped data
         for (auto &it : data) {
-            // Don't store literal character [Need to find/handle more this when encountered]
-            if (it.first == '\n' || it.first == '\r') {
-                outStr << "nl ";
-            } else if (it.first == ' ') {
-                outStr << "sp ";
-            } else if (it.first == '\t') {
-                outStr << "tb ";
-            } else {
-                outStr << it.first << " ";
-            }
+            outStr << ((uint64_t) it.first ^ keyMask) << " ";
 
             uint64_t ps = 0, c = 0;
             for (uint64_t i : it.second) {
                 ps |= i << (8 * c), c++;
                 if (c == 4) {
                     ps |= (uint64_t) 4 << 32;
-                    outStr << std::bitset<64>(ps ^ keyMask) << " ";
+                    outStr << (ps ^ keyMask) << " ";
                     ps = 0, c = 0;
                 }
             }
             if (ps != 0) {
                 ps |= c << 32;
             }
-            outStr << std::bitset<64>(ps ^ keyMask) << " \n";
+            outStr << (ps ^ keyMask) << " " << c << " \n";
         }
         t_index = t_pos + 1;
     }
@@ -109,7 +98,7 @@ std::string encryption::decrypt(const std::string &encDat, const std::string &ke
         if (t_token == LINE_SEPARATOR) {
             intoData = true;
             if (data != nullptr && datLength != 0) {
-                for (int i = 0; i < datLength; i++) outStr << data[i];
+                for (uint64_t i = 0; i < datLength; i++) outStr << data[i];
                 outStr << "\n";
             }
             t_index = t_pos + 1;
@@ -129,23 +118,16 @@ std::string encryption::decrypt(const std::string &encDat, const std::string &ke
                     p_index = p_pos + 1;
                     continue;
                 }
+                uint64_t o = binary_to_uint(p_token) ^ keyMask;
                 if (count == 0) {
-                    if (p_token.length() == 1) c = p_token[0];
-                    if (p_token.length() == 2) {
-                        if (p_token == "nl") c = '\n';
-                        if (p_token == "tb") c = '\t';
-                        if (p_token == "sp") c = ' ';
-                    }
+                    c = o;
                     count++;
                 } else {
-                    if (p_token.length() == 64) {
-                        uint64_t o = binary_to_uint(p_token) ^ keyMask;
-                        uint64_t numPos = o >> 32;
-                        for (uint64_t p = 0; p < numPos; p++) {
-                            uint64_t pos = (o >> (8 * p)) & 0xFF;
-                            if (data != nullptr) {
-                                data[pos - 1] = c;
-                            }
+                    uint64_t numPos = o >> 32;
+                    for (uint64_t p = 0; p < numPos; p++) {
+                        uint64_t pos = (o >> (8 * p)) & 0xFF;
+                        if (data != nullptr) {
+                            data[pos - 1] = c;
                         }
                     }
                 }
